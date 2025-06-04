@@ -13,9 +13,9 @@ def center_crop(to_crop, target):
     return to_crop[:, :, start_H:start_H + Ht, start_W:start_W + Wt]
 
 class SimpleUNet:
-    def __init__(self):
-        # Encoder (same as you have)
-        self.conv1 = ConvolutionalLayer3D(3, in_channels=1, out_channels=8, padding=1)
+    def __init__(self, in_channels=1):
+        # Encoder
+        self.conv1 = ConvolutionalLayer3D(3, in_channels=in_channels, out_channels=8, padding=1)
         self.relu1 = ReLULayer()
         self.pool1 = MaxPoolLayer3D(pool_size=2, stride=2)
 
@@ -41,8 +41,10 @@ class SimpleUNet:
         self.conv_final = ConvolutionalLayer3D(1, in_channels=8, out_channels=1, padding=0)
 
     def upsample_layer(self, x, scale=2):
-        # Nearest-neighbor upsampling
-        return np.repeat(np.repeat(x, scale, axis=2), scale, axis=3)
+        return x[:, :, :, :, np.newaxis].repeat(scale, axis=4) \
+                .reshape(x.shape[0], x.shape[1], x.shape[2], x.shape[3] * scale) \
+                [:, :, :, np.newaxis, :].repeat(scale, axis=3) \
+                .reshape(x.shape[0], x.shape[1], x.shape[2] * scale, x.shape[3] * scale)
 
     def forward(self, x):
         # Encoder
@@ -114,17 +116,14 @@ class SimpleUNet:
         return grad_down
     
 def test_simple_unet(model_class):
-    # Create the model instance
     model = model_class()
 
-    # Generate a random input tensor with shape (batch=1, channels=1, height=64, width=64)
-    x = np.random.randn(1, 1, 64, 64).astype(np.float32)
+    x = np.random.randn(1, 3, 64, 64).astype(np.float32)
 
     # Forward pass
     output = model.forward(x)
     print(f"Forward output shape: {output.shape}")
 
-    # Create a random target of the same shape as output
     target = np.random.randn(*output.shape).astype(np.float32)
 
     # Compute gradient of MSE loss w.r.t output: dJ/dOut = 2*(output - target) / N
@@ -135,7 +134,7 @@ def test_simple_unet(model_class):
     print(f"Backward output (gradient wrt input) shape: {dJdInput.shape}")
 
     # Sanity checks
-    assert output.shape == (1, 1, 64, 64), "Unexpected output shape"
+    assert output.shape == (1, 3, 64, 64), "Unexpected output shape"
     assert dJdInput.shape == x.shape, "Gradient shape mismatch with input"
 
     print("Test passed: forward and backward executed successfully with matching shapes.")    

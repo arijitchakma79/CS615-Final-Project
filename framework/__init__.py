@@ -11,6 +11,7 @@ from .ConvolutionalLayer import ConvolutionalLayer
 from .MaxPoolLayer import MaxPoolLayer
 from .FlatteningLayer import FlatteningLayer
 from .CrossEntroyLayer import CrossEntropy
-from .ConvolutionalLayer3D import ConvolutionalLayer3D
-from .MaxPoolLayer3D import MaxPoolLayer3D
+from .FasterConvolutionalLayer3D import ConvolutionalLayer3D
+from .FasterMaxPoolLayer3D import MaxPoolLayer3D
 from .FlatteningLayer3D import FlatteningLayer3D
+from .BinaryCrossEntropy import BinaryCrossEntropy
