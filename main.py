@@ -97,6 +97,7 @@ def train_unet(model, train_data, epochs=10, lr=1e-3):
                     for j in [model.conv1, model.conv2, model.bottleneck_conv,
                               model.conv3, model.conv4, model.conv5, model.conv_final]:
                         j.updateKernelsAdam(lr)
+                gradIn = grad
 
         avg_train_loss = total_loss / len(train_data)
         train_losses.append(avg_train_loss)
@@ -207,12 +208,12 @@ if __name__ == "__main__":
         split_file=split_file,
         class_prefix="Abyssinian_",
         img_size=(64, 64),
-        max_samples=20
+        max_samples=50
     )
     print(f"Loaded {len(data)} samples for Abyssinian")
 
     # Train for 100 epochs
-    train_unet(model, data, epochs=20, lr=0.5)
+    train_unet(model, data, epochs=1000, lr=0.001)
 
     # Evaluate on the same data used for training
     save_predictions(model, data, output_dir="train_predictions")

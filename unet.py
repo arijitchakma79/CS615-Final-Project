@@ -118,7 +118,7 @@ class SimpleUNet:
 def test_simple_unet(model_class):
     model = model_class()
 
-    x = np.random.randn(1, 3, 64, 64).astype(np.float32)
+    x = np.random.randn(1, 1, 64, 64).astype(np.float32)
 
     # Forward pass
     output = model.forward(x)
@@ -134,7 +134,7 @@ def test_simple_unet(model_class):
     print(f"Backward output (gradient wrt input) shape: {dJdInput.shape}")
 
     # Sanity checks
-    assert output.shape == (1, 3, 64, 64), "Unexpected output shape"
+    assert output.shape == (1, 1, 64, 64), "Unexpected output shape"
     assert dJdInput.shape == x.shape, "Gradient shape mismatch with input"
 
     print("Test passed: forward and backward executed successfully with matching shapes.")    
