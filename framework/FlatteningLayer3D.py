@@ -9,7 +9,7 @@ class FlatteningLayer3D(Layer):
         # Input shape: (N, C, H, W)
         self.setPrevIn(dataIn)
         N, C, H, W = dataIn.shape
-        output = dataIn.reshape(N, -1, order='F')  # Flatten each sample
+        output = dataIn.reshape(N, -1, order='F')
         self.setPrevOut(output)
         return output
 

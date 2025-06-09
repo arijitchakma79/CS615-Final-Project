@@ -79,9 +79,7 @@ if __name__ == "__main__":
     )
     print(f"Loaded {len(data)} samples for Abyssinian")
 
-    # Train for 100 epochs
     train_unet(model, data, epochs=1000, lr=0.001)
 
-    # Evaluate on the same data used for training
     save_predictions(model, data, output_dir="train_predictions")
 
