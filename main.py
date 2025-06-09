@@ -159,6 +159,39 @@ def test_data_loader(data):
 
         if i == 1:
             break
+def load_pet_dataset_by_class(image_dir, trimap_dir, split_file, class_prefix, img_size=(64, 64), max_samples=None):
+    with open(split_file, 'r') as f:
+        lines = f.read().splitlines()
+
+    data = []
+    for line in lines:
+        img_name = line.split()[0]
+
+        # ✅ Match all images of the same breed/class
+        if not img_name.startswith(class_prefix):
+            continue
+
+        image_path = os.path.join(image_dir, img_name + '.jpg')
+        mask_path = os.path.join(trimap_dir, img_name + '.png')
+
+        img = cv2.imread(image_path, cv2.IMREAD_COLOR)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = cv2.resize(img, img_size)
+        img = img.astype(np.float32) / 255.0
+        img = img.transpose(2, 0, 1)
+
+        mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
+        mask = cv2.resize(mask, img_size, interpolation=cv2.INTER_NEAREST)
+        mask = (mask == 1).astype(np.float32)
+        mask = np.expand_dims(mask, axis=0)
+
+        data.append((img, mask))
+
+        if max_samples and len(data) >= max_samples:
+            break
+
+    return data
+
 
 
 if __name__ == "__main__":
@@ -167,11 +200,20 @@ if __name__ == "__main__":
     trimap_dir = "./oxford-iiit-pet/annotations/trimaps"
     split_file = "./oxford-iiit-pet/annotations/trainval.txt"
 
-    data = load_pet_dataset(img_dir, trimap_dir, split_file)
-    print(f"Total samples: {len(data)}")
+    # Load only the first 20 Abyssinian images
+    data = load_pet_dataset_by_class(
+        image_dir=img_dir,
+        trimap_dir=trimap_dir,
+        split_file=split_file,
+        class_prefix="Abyssinian_",
+        img_size=(64, 64),
+        max_samples=20
+    )
+    print(f"Loaded {len(data)} samples for Abyssinian")
 
-    train_data, val_data = split_dataset(data, val_ratio=0.2)
-    print(f"Training samples: {len(train_data)} | Validation samples: {len(val_data)}")
+    # Train for 100 epochs
+    train_unet(model, data, epochs=20, lr=0.5)
 
-    train_unet(model, train_data[:100], epochs=10, lr=0.001)
-    save_predictions(model, val_data[:20])
+    # Evaluate on the same data used for training
+    save_predictions(model, data, output_dir="train_predictions")
+
