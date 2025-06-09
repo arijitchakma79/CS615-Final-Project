@@ -11,7 +11,7 @@ def save_model(model, path="simple_unet_weights.pkl"):
     weights = {}
     for i, layer in enumerate([model.conv1, model.conv2, model.bottleneck_conv,
                                model.conv3, model.conv4, model.conv5, model.conv_final]):
-        weights[f"conv{i+1}_weights"] = layer.kernel
+        weights[f"conv{i+1}_weights"] = layer.kernels
         weights[f"conv{i+1}_bias"] = layer.bias
     with open(path, 'wb') as f:
         pickle.dump(weights, f)
@@ -23,7 +23,7 @@ def load_model(model, path="simple_unet_weights.pkl"):
         weights = pickle.load(f)
     for i, layer in enumerate([model.conv1, model.conv2, model.bottleneck_conv,
                                model.conv3, model.conv4, model.conv5, model.conv_final]):
-        layer.kernel = weights[f"conv{i+1}_weights"]
+        layer.kernels = weights[f"conv{i+1}_weights"]
         layer.bias = weights[f"conv{i+1}_bias"]
     print(f"Model loaded from {path}")
 
