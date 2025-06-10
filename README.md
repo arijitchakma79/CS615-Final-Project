@@ -85,7 +85,9 @@ source .venv/bin/activate         # On Unix/macOS
 
 # 3. Install required packages
 pip install -r requirements.txt
-### ▶️ Run Training
+
+```
+
 
 ### 📁 Dataset Setup
 
@@ -101,7 +103,7 @@ CS615-Final-Project/
 
 Make sure the structure is exactly like above so the loader can find files correctly.
 
-
+### ▶️ Run Training
 ```bash
 python main.py
 ```
