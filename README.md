@@ -94,13 +94,14 @@ pip install -r requirements.txt
 1. **Download the [Oxford-IIIT Pet Dataset](https://www.robots.ox.ac.uk/~vgg/data/pets/)** from the official website.
 
 2. Extract the dataset and **move it to** oxford-iiit-pet directory as follows:
+```
 CS615-Final-Project/
 ├── oxford-iiit-pet/
 │   ├── images/             # Place all .jpg image files here
 │   └── annotations/
 │       └── trimaps/        # Place all .png mask files here
 │       └── trainval.txt    # This file should also go here
-
+```
 Make sure the structure is exactly like above so the loader can find files correctly.
 
 ### ▶️ Run Training
