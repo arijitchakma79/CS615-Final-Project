@@ -82,11 +82,12 @@ class ConvolutionalLayer3D(Layer):
         C, H, W = shape
         out_H = H - kH + 1
         out_W = W - kW + 1
-        image = np.zeros(shape)
+        image = np.zeros((C, H, W))
 
         for y in range(out_H):
             for x in range(out_W):
-                image[:, y:y + kH, x:x + kW] += col[:, y * out_W + x].reshape(C, kH, kW)
+                patch = col[:, y * out_W + x].reshape(C, kH, kW)
+                image[:, y:y + kH, x:x + kW] += patch
 
         return image
 

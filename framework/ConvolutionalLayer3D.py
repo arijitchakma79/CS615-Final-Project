@@ -50,7 +50,6 @@ class ConvolutionalLayer3D(Layer):
         return out
 
     def forward(self, dataIn):
-        # Pad input
         if self.padding > 0:
             dataIn_padded = np.pad(dataIn, ((0,0), (0,0), (self.padding, self.padding), (self.padding, self.padding)), mode='constant')
         else:
@@ -74,18 +73,17 @@ class ConvolutionalLayer3D(Layer):
         pass
 
     def backward(self, gradient):
-        dataIn = self.getPrevIn()  # Original input without padding
+        dataIn = self.getPrevIn()
         N, C_in, H_orig, W_orig = dataIn.shape
         pad = self.padding
         kH, kW = self.kernel_size, self.kernel_size
 
-        # Pad input for backward calculations
         if pad > 0:
             dataIn_padded = np.pad(dataIn, ((0,0), (0,0), (pad, pad), (pad, pad)))
         else:
             dataIn_padded = dataIn
 
-        N, C_in, H, W = dataIn_padded.shape  # padded dims
+        N, C_in, H, W = dataIn_padded.shape
         grad_input_padded = np.zeros_like(dataIn_padded)
 
         self.dJdK = np.zeros_like(self.kernels)
@@ -96,19 +94,15 @@ class ConvolutionalLayer3D(Layer):
                 grad_out = gradient[n, oc]
                 flipped_kernel = np.flip(np.flip(self.kernels[oc], axis=1), axis=2)
 
-                # Compute grad_input for padded input
                 for ic in range(C_in):
                     padded_grad_out = np.pad(grad_out, ((kH - 1, kH - 1), (kW - 1, kW - 1)))
                     grad_input_padded[n, ic] += self.crossCorrelate2D(flipped_kernel[ic], padded_grad_out)
 
-                # Compute kernel gradient
                 for ic in range(C_in):
                     self.dJdK[oc, ic] += self.crossCorrelate2D(grad_out, dataIn_padded[n, ic])
 
-                # Bias gradient
                 self.dJdB[oc] += np.sum(grad_out)
 
-        # Remove padding from grad_input before returning
         if pad > 0:
             grad_input = grad_input_padded[:, :, pad:-pad, pad:-pad]
         else:
