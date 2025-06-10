@@ -129,7 +129,8 @@ CS615-Final-Project/
 │   └── annotations/
 │       └── trimaps/        # Pixel-level masks (PNG format)
 │       └── trainval.txt    # Train split list
-├── train_predictions/      # Output predictions (PNG mask overlays)
+├── train_predictions/      # Training data predictions (PNG mask overlays)
+|── validation_predictions/ # Validation data predictions (PNG mask overlays)
 ├── requirements.txt        # Python dependencies
 ```
 
