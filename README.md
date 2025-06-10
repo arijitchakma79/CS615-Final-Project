@@ -72,8 +72,8 @@ Our implementation follows the **U-Net architecture**, featuring:
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/unet-animal-recognition.git
-cd unet-animal-recognition
+git clone https://github.com/arijitchakma79/CS615-Final-Project.git
+cd CS615-Final-Project
 
 # 2. Create and activate virtual environment
 python -m venv .venv
@@ -81,9 +81,26 @@ source .venv/bin/activate         # On Unix/macOS
 # OR
 .venv\Scripts\activate            # On Windows
 
+
+
 # 3. Install required packages
 pip install -r requirements.txt
 ### ▶️ Run Training
+
+### 📁 Dataset Setup
+
+1. **Download the [Oxford-IIIT Pet Dataset](https://www.robots.ox.ac.uk/~vgg/data/pets/)** from the official website.
+
+2. Extract the dataset and **move it to** oxford-iiit-pet directory as follows:
+CS615-Final-Project/
+├── oxford-iiit-pet/
+│   ├── images/             # Place all .jpg image files here
+│   └── annotations/
+│       └── trimaps/        # Place all .png mask files here
+│       └── trainval.txt    # This file should also go here
+
+Make sure the structure is exactly like above so the loader can find files correctly.
+
 
 ```bash
 python main.py
@@ -93,16 +110,16 @@ This will:
 - Load a subset of Abyssinian cat images (can be changed in `main.py`)
 - Train the Full U-Net model for 100 epochs
 - Save predicted segmentation masks to the `train_predictions/` directory
+- Save the predicted segmentations of the test/validation set to the `validation_predictions/` directory
 
 ---
 
 ## 🖼️ Directory Structure
 
 ```
-project-root/
+CS615-Final-Project/
 ├── framework/              # All custom layers (Conv, Pool, etc.)
 ├── utils.py                # Helper functions (data loading, prediction, etc.)
-├── full_unet_model.py      # Full U-Net class (3-level deep encoder-decoder)
 ├── main.py                 # Training + prediction entry point
 ├── oxford-iiit-pet/
 │   ├── images/             # Pet images (JPEG format)
