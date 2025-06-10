@@ -1,2 +1,8 @@
-oxford-iiit-pet
-__pycache__
+# Ignore Python virtual environment
+.venv/
+
+# Ignore dataset or project-specific data
+oxford-iiit-pet/
+
+# Ignore Python cache files
+__pycache__/
