@@ -1,8 +1,12 @@
 import numpy as np
 
-# Assume you already implemented these:
+from framework import (
+    ConvolutionalLayer3D, 
+    ReLULayer, 
+    MaxPoolLayer3D
+    )
 
-from framework import (ConvolutionalLayer3D, ReLULayer, MaxPoolLayer3D)
+
 def center_crop(to_crop, target):
     _, _, H, W = to_crop.shape
     _, _, Ht, Wt = target.shape
